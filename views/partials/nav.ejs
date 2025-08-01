@@ -1,0 +1,69 @@
+<nav class="navbar">
+    <div class="navbar-container">
+        <a class="navbar-brand" href="#">BlogiFY</a>
+        <ul class="nav-list">
+            <li class="nav-item">
+                <a class="nav-link" href="/">Home</a>
+            </li>
+            
+            <% if (locals.user) { %>
+              <li class="nav-item">
+                    <a class="nav-link" href="/blog">Add Blog</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/myblog">My Blog</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <button class="dropdown-btn" id="dropdownToggle" aria-haspopup="true" aria-expanded="false">
+                        <img src="<%= locals.user.profilePhoto || 'https://via.placeholder.com/30' %>" alt="Profile" class="profile-pic-small">
+                        <%= locals.user.fullName %>
+                    </button>
+                    <div class="dropdown-content" id="myDropdown">
+                        <a href="/myprofile">My Profile</a>
+                        <form action="/user/logout" method="get">
+                            <button type="submit">Logout</button>
+                        </form>
+                    </div>
+                </li>
+                
+            <% } else { %>
+                <li class="nav-item">
+                    <form action="/user/login" method="get">
+                        <button class="nav-button">Login</button>
+                    </form>
+                </li>
+                <li class="nav-item">
+                    <form action="/user/signup" method="get">
+                        <button class="nav-button">Sign Up</button>
+                    </form>
+                </li>
+            <% } %>
+        </ul>
+    </div>
+</nav>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const dropdownToggle = document.getElementById('dropdownToggle');
+        const dropdownContent = document.getElementById('myDropdown');
+
+        if (dropdownToggle && dropdownContent) {
+            dropdownToggle.addEventListener('click', function(event) {
+                event.stopPropagation();
+                dropdownContent.classList.toggle('show');
+                this.setAttribute('aria-expanded', dropdownContent.classList.contains('show'));
+            });
+
+            document.addEventListener('click', function(event) {
+                if (!dropdownToggle.contains(event.target) && !dropdownContent.contains(event.target)) {
+                    dropdownContent.classList.remove('show');
+                    dropdownToggle.setAttribute('aria-expanded', 'false');
+                }
+            });
+
+            dropdownContent.addEventListener('click', function(event) {
+                event.stopPropagation();
+            });
+        }
+    });
+</script>

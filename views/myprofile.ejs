@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./partials/head.ejs') %>
+    <title>BlogiFY - My Profile</title>
+    <style>
+        /* Base styles for the main content area */
+        .main-content-wrapper {
+            flex-grow: 1;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: var(--background-color);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* Profile Container */
+        .profile-container {
+            background-color: var(--card-background); /* Consistent with blog cards */
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 600px; /* Max width for the profile card */
+            width: 100%;
+            text-align: center; /* Center content within the card */
+            animation: fadeIn 0.8s ease-out;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 2.5em;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        /* Profile Photo Section */
+        .profile-photo-section {
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block; /* Allows auto-width and centering */
+        }
+
+        .profile-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--accent-color); /* Highlight border */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            transition: border-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .profile-photo:hover {
+            border-color: var(--primary-color);
+            transform: scale(1.02);
+        }
+
+        /* File Upload Button (Overlay) */
+        .upload-photo-label {
+            position: absolute;
+            bottom: 5px; /* Adjust as needed for positioning over the photo */
+            right: 5px;
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .upload-photo-label:hover {
+            background-color: var(--secondary-color);
+            transform: scale(1.1);
+        }
+
+        .upload-photo-label svg {
+            fill: currentColor; /* Use text-light color for the icon */
+            width: 20px;
+            height: 20px;
+        }
+
+        #profilePhotoInput {
+            display: none; /* Hide the default file input */
+        }
+
+        /* Profile Details */
+        .profile-details {
+            text-align: left; /* Align text within details section to the left */
+            margin-top: 20px;
+        }
+
+        .profile-detail-item {
+            margin-bottom: 15px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color); /* Subtle separator */
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .profile-detail-item:last-child {
+            border-bottom: none; /* No border for the last item */
+        }
+
+        .profile-detail-item strong {
+            color: var(--primary-color);
+            min-width: 80px; /* Ensure labels align */
+            font-size: 1.05em;
+        }
+
+        .profile-detail-item span {
+            color: var(--text-dark);
+            font-size: 1.05em;
+            flex-grow: 1; /* Allow content to take available space */
+            word-wrap: break-word; /* Wrap long words */
+        }
+        
+        /* Message/Alert styling */
+        .message-success {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+            text-align: center;
+            font-weight: 600;
+        }
+        .message-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .profile-container {
+                padding: 25px;
+                border-radius: 10px;
+            }
+            h1 {
+                font-size: 2em;
+                margin-bottom: 20px;
+            }
+            .profile-photo {
+                width: 120px;
+                height: 120px;
+                border-width: 4px;
+            }
+            .upload-photo-label {
+                width: 35px;
+                height: 35px;
+                bottom: 2px;
+                right: 2px;
+            }
+            .upload-photo-label svg {
+                width: 18px;
+                height: 18px;
+            }
+            .profile-detail-item {
+                flex-direction: column; /* Stack labels and values on small screens */
+                align-items: flex-start;
+                gap: 5px;
+            }
+            .profile-detail-item strong {
+                min-width: unset; /* Remove min-width when stacked */
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <%- include('./partials/nav.ejs') %>
+
+    <div class="main-content-wrapper">
+        <div class="profile-container">
+            <h1>My Profile</h1>
+
+            <% if (locals.success) { %>
+                <div class="message-success">
+                    <%= success %>
+                </div>
+            <% } %>
+            <% if (locals.error) { %>
+                <div class="message-error">
+                    <%= error %>
+                </div>
+            <% } %>
+
+            <div class="profile-photo-section">
+                <img src="<%= user.profilePhoto%>" alt="<%= user.fullName %>'s Profile Photo" class="profile-photo" id="currentProfilePhoto">
+                
+                <label for="profilePhotoInput" class="upload-photo-label" title="Update Profile Photo">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M149.1 64.8C156.4 53.1 170.3 48 184 48H328c13.7 0 27.6 5.1 34.9 16.8s10.4 23.3 8.3 37.1l-10.4 69.5c-4.6 30.9-2.3 62.4 5.9 92.4L288 368l-59.1-88.6c-4-6-9.7-10.3-16.2-12.7L109.9 238.1c-13.1-4.8-27.8-1.7-38.4 7.2s-14.7 22.8-11.5 36.6l8.8 38.3c7.1 30.9 5.1 62.9-5.1 93.3c-7.9 23.7-3.9 49.3 10.4 69.5l-33.6 33.6c-6.2 6.2-6.2 16.4 0 22.6s16.4 6.2 22.6 0L149.1 406.4l11.6-11.6c9.7-9.7 21.6-17 35.1-20.9l16.1-4.7c15.2-4.4 29.8-1.5 43.3 8.2l38.2 28.7 30.2-45.3c7-10.5 17.5-16.8 29-18.9s23.2 .2 32.8 9.8l10.4 10.4c18.5 18.5 4.1 49.7-22.6 56.9c-25.8 7-52.6 1.7-77.5-10.7l-47.8-23.9c-12.1-6-25.7-9.1-39.4-9.1H216c-12.7 0-25.3 2.5-37 7.5L138.9 397c-17.7 7.1-36.8 6.3-54-.2L64 372.3 29.5 406.8c-2.4 2.4-3.8 5.7-3.8 9.2V448c0 17.7 14.3 32 32 32H96c17.7 0 32-14.3 32-32V416h64v32c0 17.7 14.3 32 32 32h32c17.7 0 32-14.3 32-32V416h64v32c0 17.7 14.3 32 32 32h32c17.7 0 32-14.3 32-32V406.8c0-3.5-1.4-6.9-3.8-9.2L423.8 372c-17.2-6.5-36.3-7.3-54-.2l-40.1 16c-11.7 4.7-24.3 7.2-37 7.2H216c-17.7 0-32-14.3-32-32V352h-2.5l5.9-20.7c11-38.5 9-78.5-5.9-115.5L140 106.8l10.4-69.5zM224 288a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zM352 288a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zM320 144a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg>
+                </label>
+                <form action="/myprofile/updatePhoto" method="post" enctype="multipart/form-data" id="profilePhotoForm">
+                    <input type="file" name="profilePhoto" id="profilePhotoInput" accept="image/*">
+                </form>
+            </div>
+
+            <div class="profile-details">
+                <div class="profile-detail-item">
+                    <strong>Name:</strong>
+                    <span><%= user.fullName %></span>
+                </div>
+                <div class="profile-detail-item">
+                    <strong>Email:</strong>
+                    <span><%= user.email %></span>
+                </div>
+                <div class="profile-detail-item">
+                    <strong>Joined On:</strong>
+                    <span><%= new Date(user.createdAt).toLocaleDateString() %></span>
+                </div>
+                <div class="profile-detail-item">
+                    <strong>Total Blogs:</strong>
+                    <span><%= blogsCount %></span>
+                </div>
+                <div class="profile-detail-item">
+                    <strong>Total Comments:</strong>
+                    <span><%= commentsCount %></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.getElementById('profilePhotoInput').addEventListener('change', function() {
+            // Check if a file was selected
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                const form = document.getElementById('profilePhotoForm');
+
+                reader.onload = function(e) {
+                    // Update the image preview immediately
+                    document.getElementById('currentProfilePhoto').src = e.target.result;
+                };
+
+                reader.readAsDataURL(this.files[0]);
+
+                // Automatically submit the form
+                form.submit();
+            }
+        });
+    </script>
+</body>
+</html>

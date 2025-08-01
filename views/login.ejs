@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./partials/head.ejs') %>
+    <title>BlogiFY - Login</title> <style>
+        /* Login form specific styles - ONLY include styles relevant to THIS page */
+        .login-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-card {
+            background-color: var(--card-background);
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .login-card h2 {
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-size: 2em;
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            color: var(--text-dark);
+            background-color: var(--background-light);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.2);
+            outline: none;
+        }
+
+        .form-text {
+            font-size: 0.85rem;
+            color: #777;
+            margin-top: 5px;
+            text-align: left;
+        }
+
+        .submit-button {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            border: none;
+            padding: 14px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .submit-button:hover {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Error message styling */
+        .error-message {
+            background-color: #ffe0e6;
+            color: #d8000c;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #ffb3c1;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        /* Responsive adjustments for Login Form */
+        @media (max-width: 500px) {
+            .login-card {
+                padding: 30px 20px;
+                margin: 0 15px;
+            }
+            .login-card h2 {
+                font-size: 1.8em;
+            }
+            .submit-button {
+                font-size: 1rem;
+                padding: 12px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <%- include('./partials/nav.ejs') %>
+
+    <div class="login-container">
+        <div class="login-card">
+            <h2>Login to BlogiFY</h2>
+
+            <% if (typeof error !== 'undefined' && error) { %>
+                <div class="error-message">
+                    <%= error %>
+                </div>
+            <% } %>
+
+            <form action="/user/login" method="post">
+                <div class="form-group">
+                    <label for="email" class="form-label">Email address</label>
+                    <input type="email" name="email" class="form-input" id="email" aria-describedby="emailHelp" required>
+                    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" name="password" class="form-input" id="password" required>
+                </div>
+                
+                <button type="submit" class="submit-button">Login</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

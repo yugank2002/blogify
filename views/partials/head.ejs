@@ -1,0 +1,216 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+    /* Variables */
+    :root {
+        --primary-color: #6a0dad; /* Deep Purple */
+        --secondary-color: #ffc107; /* Amber */
+        --accent-color: #00bcd4; /* Cyan */
+        --background-light: #f4f7f6;
+        --text-dark: #333;
+        --text-light: #fff;
+        --card-background: #ffffff;
+        --border-color: #e0e0e0;
+        --overlay-color: rgba(0, 0, 0, 0.4); /* Dark semi-transparent for overlay */
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: var(--background-light);
+        color: var(--text-dark);
+        line-height: 1.6;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        overflow-x: hidden; /* Hide horizontal scrollbar */
+        /* IMPORTANT: Add padding-top to body to prevent content from hiding under fixed nav */
+        padding-top: 80px; /* Adjust this value based on your navbar's actual height */
+    }
+
+    /* Navbar specific styles */
+    .navbar {
+        background-color: var(--primary-color);
+        padding: 1rem 0;
+        /* FIX: Make navbar fixed and add shadow */
+        position: fixed; /* Makes the navbar stay in place */
+        top: 0;          /* Positions it at the top of the viewport */
+        width: 100%;     /* Ensures it spans the full width */
+        z-index: 1000;   /* Keeps it above other content */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Added shadow for depth */
+    }
+
+    .navbar-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+    }
+
+    .navbar-brand {
+        color: var(--text-light);
+        font-size: 1.8rem;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .nav-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        align-items: center;
+    }
+
+    .nav-item {
+        margin-left: 25px;
+        position: relative; 
+    }
+
+    .nav-link {
+        color: var(--text-light);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: color 0.3s ease;
+        display: flex;
+        align-items: center;
+    }
+
+    .nav-link:hover {
+        color: var(--secondary-color);
+    }
+
+    .nav-button {
+        background-color: var(--secondary-color);
+        color: var(--primary-color);
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .nav-button:hover {
+        background-color: var(--accent-color);
+        color: var(--text-light);
+    }
+
+    /* Dropdown specific styles */
+    .dropdown {
+        position: relative;
+    }
+
+    .dropdown-btn {
+        background: none;
+        border: none;
+        color: var(--text-light);
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        padding: 10px 15px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .dropdown-btn:hover,
+    .dropdown-btn:focus {
+        background-color: rgba(255, 255, 255, 0.1);
+        outline: none;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: var(--card-background);
+        min-width: 180px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 10;
+        border-radius: 8px;
+        top: calc(100% + 10px);
+        right: auto; 
+        left: 0; 
+        overflow: hidden;
+        padding: 5px 0;
+    }
+
+    .dropdown-content.show {
+        display: block;
+    }
+
+    .dropdown-content a, 
+    .dropdown-content form button {
+        color: var(--text-dark);
+        padding: 12px 20px;
+        text-decoration: none;
+        display: block;
+        background: none;
+        border: none;
+        width: 100%;
+        text-align: left;
+        cursor: pointer;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.95rem;
+        transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .dropdown-content a:hover, 
+    .dropdown-content form button:hover {
+        background-color: var(--background-light);
+        color: var(--primary-color);
+    }
+    
+    .dropdown-content form {
+        margin: 0;
+        padding: 0;
+    }
+
+    .profile-pic-small {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    /* Responsive adjustments for Navbar */
+    @media (max-width: 768px) {
+        .navbar-container {
+            flex-direction: column;
+            padding: 15px;
+            justify-content: center;
+        }
+        .nav-list {
+            margin-top: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+        }
+        .nav-item {
+            margin: 5px 10px;
+            flex-basis: auto;
+        }
+        .dropdown-content {
+            right: auto;
+            left: 50%;
+            transform: translateX(-50%);
+            min-width: 160px;
+            width: auto; 
+        }
+        /* Adjust padding-top for body on smaller screens if navbar height changes */
+        body {
+            padding-top: 120px; /* Example: if navbar gets taller when stacking */
+        }
+    }
+</style>

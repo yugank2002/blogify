@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./partials/head.ejs') %>
+    <title>BlogiFY - Edit Blog</title>
+    <style>
+        /* General layout for content containers */
+        .main-content-wrapper {
+            flex-grow: 1;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: var(--background-color);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align content to the top */
+        }
+
+        /* Container for the edit form, similar to profile card */
+        .edit-blog-container {
+            background-color: var(--card-background); /* Consistent with blog cards & profile */
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 700px; /* Slightly wider than profile for blog content */
+            width: 100%;
+            text-align: center;
+            animation: fadeIn 0.8s ease-out;
+            box-sizing: border-box;
+            margin-top: 30px; /* Space from navbar */
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 2.5em;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        /* Form styling */
+        .edit-blog-container form {
+            text-align: left; /* Align form labels/inputs to the left */
+        }
+
+        .edit-blog-container form div {
+            margin-bottom: 20px;
+        }
+
+        .edit-blog-container label {
+            display: block; /* Make labels take full width */
+            margin-bottom: 8px;
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        .edit-blog-container input[type="text"],
+        .edit-blog-container textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1em;
+            color: var(--text-dark);
+            background-color: var(--input-background);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+        }
+
+        .edit-blog-container input[type="text"]:focus,
+        .edit-blog-container textarea:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(var(--accent-color-rgb), 0.2); /* Soft glow effect */
+            outline: none;
+        }
+
+        .edit-blog-container textarea {
+            resize: vertical; /* Allow vertical resizing */
+            min-height: 120px;
+        }
+
+        /* Timestamps styling */
+        .timestamps-section {
+            margin-top: 30px;
+            margin-bottom: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            text-align: center; /* Center the timestamp text */
+        }
+
+        .timestamps-section p {
+            color: #777; /* Softer text color */
+            font-size: 0.95em;
+            margin-bottom: 8px;
+        }
+
+        .timestamps-section p strong {
+            color: var(--primary-color);
+        }
+
+        /* Submit Button */
+        .edit-blog-container button[type="submit"] {
+            background-color: var(--accent-color);
+            color: var(--text-light);
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            width: auto; /* Allow button to size based on content */
+            display: block; /* Make it a block element to center it */
+            margin: 0 auto 20px auto; /* Center button and add bottom margin */
+        }
+
+        .edit-blog-container button[type="submit"]:hover {
+            background-color: #0097a7; /* Darker shade of accent */
+            transform: translateY(-2px);
+        }
+
+        /* Back link */
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+
+        /* Message/Alert styling (copied from other pages for consistency) */
+        .message-success {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+            text-align: center;
+            font-weight: 600;
+        }
+        .message-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .edit-blog-container {
+                padding: 25px;
+                border-radius: 10px;
+                margin-top: 20px;
+            }
+            h1 {
+                font-size: 2em;
+                margin-bottom: 20px;
+            }
+            .edit-blog-container input[type="text"],
+            .edit-blog-container textarea {
+                padding: 10px;
+            }
+            .edit-blog-container label {
+                font-size: 1em;
+            }
+            .timestamps-section {
+                margin-top: 20px;
+                margin-bottom: 20px;
+                padding-top: 15px;
+            }
+            .edit-blog-container button[type="submit"] {
+                padding: 10px 20px;
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <%- include('./partials/nav.ejs') %>
+
+    <div class="main-content-wrapper">
+        <div class="edit-blog-container">
+            <h1>Edit Blog Post</h1>
+
+            <% if (locals.success) { %>
+                <div class="message-success">
+                    <%= success %>
+                </div>
+            <% } %>
+            <% if (locals.error) { %>
+                <div class="message-error">
+                    <%= error %>
+                </div>
+            <% } %>
+
+            <form action="/edit/<%= blog._id %>" method="POST">
+                <div>
+                    <label for="title">Title:</label>
+                    <input
+                        type="text"
+                        id="title"
+                        name="title"
+                        value="<%= blog.title %>"
+                        required
+                    />
+                </div>
+
+                <div>
+                    <label for="description">Description:</label>
+                    <textarea
+                        id="description"
+                        name="description"
+                        rows="6"
+                        required
+                    ><%= blog.description %></textarea>
+                </div>
+
+                <div class="timestamps-section">
+                    <p><strong>Created On:</strong> 
+                        <% 
+                            const createdAtDate = new Date(blog.createdAt);
+                            if (isNaN(createdAtDate.getTime())) { 
+                                %>N/A<% 
+                            } else {
+                                %><%= createdAtDate.toLocaleDateString('en-IN', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric'
+                                }) %><% 
+                            }
+                        %>
+                    </p>
+                    <p><strong>Last Updated:</strong> 
+                        <% 
+                            const updatedAtDate = new Date(blog.updatedAt);
+                            if (isNaN(updatedAtDate.getTime())) { 
+                                %>N/A<% 
+                            } else {
+                                %><%= updatedAtDate.toLocaleDateString('en-IN', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric'
+                                }) %><% 
+                            }
+                        %>
+                    </p>
+                </div>
+
+                <button type="submit">Update Blog</button>
+            </form>
+
+            <a href="/blog/<%= blog._id %>" class="back-link">← Back to blog</a>
+        </div>
+    </div>
+
+
+</body>
+</html>
