@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express');
 const path = require('path');
 const connection = require('./connection');
@@ -6,11 +7,10 @@ const {authentication} = require('./middlewares/auth')
 const Blog = require('./models/blog');
 const methodOverride = require('method-override');
 
-
-connection("mongodb://localhost:27017/blogify")
+connection(process.env.MONGO_URL);
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT;
 
 const userRouter = require('./routes/user');
 const blogRouter = require('./routes/blog');
