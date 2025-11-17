@@ -13,6 +13,10 @@ const blogSchema = new mongoose.Schema({
         type:String,
         required:false
     },
+    video:{
+        type:String,
+        required:false
+    },
     createdBy:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'user'

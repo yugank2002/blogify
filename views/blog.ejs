@@ -304,6 +304,10 @@
 
                 <img src="<%= blog.coverPhoto %>" alt="<%= blog.title %> Cover Photo" class="blog-post-cover">
 
+                <% if (blog.video) { %>
+                    <video controls src="<%= blog.video %>" class="blog-post-cover" style="max-height:480px; margin-top:20px; margin-bottom:30px; width:100%;"></video>
+                <% } %>
+
                 <p class="blog-post-description"><%= blog.description %></p>
 
                 <hr class="separator">

@@ -15,6 +15,7 @@ const storage = multer.diskStorage({
   }
 })
 
+// Allow uploads (images and videos) using the same storage
 const upload = multer({ storage: storage })
 
 router.get('/', async(req , res) => {
@@ -24,24 +25,21 @@ router.get('/', async(req , res) => {
     });
 })
 
-router.post('/', upload.single('coverImage'), async(req,res) => {
-   
-        const { title, description } = req.body;
+router.post('/', upload.fields([{ name: 'coverImage', maxCount: 1 }, { name: 'video', maxCount: 1 }]), async (req, res) => {
+    const { title, description } = req.body;
 
-    
+    const coverFile = req.files && req.files.coverImage ? req.files.coverImage[0] : null;
+    const videoFile = req.files && req.files.video ? req.files.video[0] : null;
 
-        
+    const newBlog = await Blog.create({
+        title,
+        description,
+        coverPhoto: coverFile ? `/uploads/${coverFile.filename}` : undefined,
+        video: videoFile ? `/uploads/${videoFile.filename}` : undefined,
+        createdBy: req.user.userid,
+    });
 
-        const newBlog = await Blog.create({
-            title,
-            description,
-            coverPhoto: `/uploads/${req.file.filename}`,
-            createdBy: req.user.userid,
-        });
-
-        
-        return res.redirect(`/blog/${newBlog._id}`);
-    
+    return res.redirect(`/blog/${newBlog._id}`);
 
 })
 
